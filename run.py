@@ -110,7 +110,6 @@ def main_thread():
             executor.shutdown(wait=False, cancel_futures=True)
 
 
-
 # Run the main function
 if __name__ == '__main__':
     try:
