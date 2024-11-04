@@ -1,18 +1,7 @@
-import multiprocessing.pool
-import threading
-import multiprocessing
+import threading 
+import asyncio 
 
-def foo(arg):
-    print(arg)
+async def foo():
+    await asyncio.sleep(1)
+    print("foo")
 
-
-t1 = threading.Thread(target=foo, args=("hello",))
-t2 = threading.Thread(target=foo, args=("world",))
-
-t1.start()
-t2.start()
-t1.join()
-t2.join()
-
-with multiprocessing.pool.ThreadPool(processes=2) as pool:
-    pool.map(foo, ["hello", "world"])
