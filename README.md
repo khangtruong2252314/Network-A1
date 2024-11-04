@@ -1,2 +1,2 @@
-# Project entry points
-python run.py
+# Project entry point
+python run.py (run simulation)
