@@ -43,6 +43,14 @@ class Register(Action):
         with open(self.tracker.torrent_directory, 'w') as f:
             json.dump(self.tracker.meta, f)
 
+        with open(self.tracker.hash_file_path, 'w') as f:
+            hash_dict = {k: f"{k}.torrent.json" for k in self.tracker.meta.keys()}   
+            json.dump(hash_dict, f)
+
+        for k, v in self.tracker.meta.items():
+            with open(self.tracker.meta_path + f"{k}.torrent.json", 'w') as f:
+                json.dump(v, f)
+
 class GetNIdlePeers(Action):
     """Handles the request for N idle peers."""
     async def execute(self):

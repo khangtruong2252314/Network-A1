@@ -14,6 +14,9 @@ class PeerTracker:
         self.hash_table = defaultdict(list)
         self.torrent_directory = self.config.meta_file_path()
         self.meta = {}
+        self.hash_dict = {}
+        self.meta_path = self.config.meta_path()
+        self.hash_file_path = self.config.hash_file_path()
 
     def log_message(self, message):
         print(f"{Fore.GREEN}[MESSAGE-TRACKER]{Style.RESET_ALL} {message}")

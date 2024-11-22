@@ -22,6 +22,14 @@ class BaseConfig(ABC):
     def buffer_size(self) -> int:
         pass
 
+    @abstractmethod
+    def hash_file_path(self) -> str:
+        pass
+
+    @abstractmethod
+    def meta_path(self) -> str:
+        pass
+
 class DefaultConfig(BaseConfig):
     def client_directory(self):
         return "box/data"
@@ -37,3 +45,9 @@ class DefaultConfig(BaseConfig):
     
     def buffer_size(self) -> int:
         return 1024
+    
+    def hash_file_path(self) -> str:
+        return "box/magnet.json"
+    
+    def meta_path(self) -> str:
+        return "box/meta/"
