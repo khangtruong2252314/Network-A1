@@ -70,7 +70,7 @@ async def main():
     peer_d_files = ['fileD1.txt', 'fileD2.txt']
 
     # Create peer tasks
-    peer_a_task = asyncio.create_task(run_peer('127.0.0.1', 1109, 'PEER A', peer_a_files))
+    peer_a_task = asyncio.create_task(run_peer('127.0.0.1', 1109, 'PEER A', peer_a_files, tracker_ip='127.0.0.1'))
     peer_b_task = asyncio.create_task(run_peer('127.0.0.1', 1110, 'PEER B', peer_b_files))
     peer_c_task = asyncio.create_task(run_peer('127.0.0.1', 1111, 'PEER C', peer_c_files, request_files=['fileA1.txt', 'fileB1.txt', 'fileD1.txt']))
     peer_d_task = asyncio.create_task(run_peer('127.0.0.1', 1112, 'PEER D', peer_d_files, request_files=['fileA1.txt', 'fileB1.txt']))
