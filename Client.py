@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 from colorama import Fore, Style
 from util import check_file_size
 from ConfigClass import DefaultConfig
@@ -115,6 +116,8 @@ class PeerClient:
         for _ in range(file_size // self.piece_size + 1):
             file_data += await reader.read(self.config.buffer_size())
         self.log(f"Received {file_name} from {peer_ip}:{peer_port}: |{file_data.decode('utf-8')}|")
+        if not os.path.exists("downloaded"):
+            os.makedirs("downloaded")
         with open(f"downloaded/{file_name}", 'wb') as file:
             file.write(file_data)
         await self.notify_transfer_complete(peer_ip)
