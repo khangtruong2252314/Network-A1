@@ -115,7 +115,8 @@ class PeerClient:
         for _ in range(file_size // self.piece_size + 1):
             file_data += await reader.read(self.config.buffer_size())
         self.log(f"Received {file_name} from {peer_ip}:{peer_port}: |{file_data.decode('utf-8')}|")
-
+        with open(f"downloaded/{file_name}", 'wb') as file:
+            file.write(file_data)
         await self.notify_transfer_complete(peer_ip)
         writer.close()
         await writer.wait_closed()
