@@ -3,6 +3,7 @@ from colorama import Fore, Style
 from util import max_bipartite_matching_scipy
 from util import itemgetter
 from threading import Thread 
+import asyncio
 
 class Action:
     """Base class for all actions that can be performed by peers."""
@@ -76,33 +77,37 @@ class GetNFileIdlePeers(Action):
     async def execute(self):
         self.log(f"Received request for N idle peers with file: {self.message['file_names']}")
         file_names = self.message['file_names']
-        T = set(file_names)
-        ip, C = list(zip(*list(self.tracker.hash_table.items())))
-        C = list(C)
-        result = [None]
-        
-        def callback(func):
-            def inner_callback(*args, **kwargs):
-                result[0] = func(*args, **kwargs)
-            return inner_callback
+        ip_file = []
+        while len(ip_file) < len(file_names):
+            T = set(file_names)
+            ip, C = list(zip(*list(self.tracker.hash_table.items())))
+            C = list(C)
+            result = [None]
+            
+            def callback(func):
+                def inner_callback(*args, **kwargs):
+                    result[0] = func(*args, **kwargs)
+                return inner_callback
 
-        thread = Thread(target=callback(max_bipartite_matching_scipy), args=(T, C))
-        # index_file = max_bipartite_matching_scipy(T, C)
-        thread.start()
-        thread.join()
-        index_file = result[0]
-        ip_file = [(file, ip[index]) for index, file in index_file.items()]
-        
-        if len(ip_file) >= len(file_names):
-            file_sizes = dict(zip(file_names, itemgetter(*file_names)(self.tracker.meta)))
-            response = {
-                'type': 'PEERS_AVAILABLE',
-                'file_peer': ip_file,
-                'file_sizes': file_sizes
-            }
-        else:
-            self.tracker.log(f"Not enough idle peers with the requested file.")
-            response = {'type': 'NOT_ENOUGH_IDLE_PEERS'}
+            thread = Thread(target=callback(max_bipartite_matching_scipy), args=(T, C))
+            # index_file = max_bipartite_matching_scipy(T, C)
+            thread.start()
+            thread.join()
+            index_file = result[0]
+            ip_file = [(file, ip[index]) for index, file in index_file.items()]
+            
+            if len(ip_file) >= len(file_names):
+                file_sizes = dict(zip(file_names, itemgetter(*file_names)(self.tracker.meta)))
+                response = {
+                    'type': 'PEERS_AVAILABLE',
+                    'file_peer': ip_file,
+                    'file_sizes': file_sizes
+                }
+            else:
+                self.tracker.log(f"Not enough idle peers with the requested file.")
+                response = {'type': 'NOT_ENOUGH_IDLE_PEERS'}
+                await asyncio.sleep(1)
+            
         self.log(f'Response: {response}')
         self.writer.write(f"{json.dumps(response)}\n".encode('utf-8'))
         await self.writer.drain()

@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('--port', type=int, default=1109)
-    parser.add_argument('--files', type=str, nargs='+', default=['fileA1.txt', 'fileA2.txt', 'fileA3.txt'])
+    parser.add_argument('--files', type=str, nargs='+', default=[])
     parser.add_argument('--peer_name', type=str, default='PEER')
     parser.add_argument('--request_files', type=str, nargs='+', default=[])
     parser.add_argument('--tracker_ip', type=str, default='127.0.0.1')
