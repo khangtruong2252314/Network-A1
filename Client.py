@@ -141,8 +141,8 @@ class PeerClient:
             if file_name in self.files:
                 with open(f"{self.file_path}/{file_name}", 'rb') as file:
                     file_data = file.read()  # Placeholder for actual file data
-                for _ in range(len(file_data) // self.piece_size + 1):
-                    writer.write(file_data)
+                for i in range(len(file_data) // self.piece_size + 1):
+                    writer.write(file_data[self.piece_size * i: self.piece_size * (i + 1)])
                     await writer.drain()
             else:
                 self.log(f"{file_name} not found on this peer.")

@@ -103,7 +103,7 @@ class GetNFileIdlePeers(Action):
                     'file_sizes': file_sizes
                 }
             else:
-                self.tracker.log(f"Not enough idle peers with the requested file.")
+                self.tracker.log(f"Hanging...")
                 response = {'type': 'NOT_ENOUGH_IDLE_PEERS'}
                 await asyncio.sleep(1)
             
