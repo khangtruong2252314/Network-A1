@@ -115,7 +115,11 @@ class PeerClient:
         file_data = b''
         for _ in range(file_size // self.piece_size + 1):
             file_data += await reader.read(self.config.buffer_size())
-        self.log(f"Received {file_name} from {peer_ip}:{peer_port}: |{file_data.decode('utf-8')}|")
+        try:
+            true_file_data = file_data.decode('utf-8')
+        except UnicodeDecodeError:
+            true_file_data = '[BINARY CONTENT]'
+        self.log(f"Received {file_name} from {peer_ip}:{peer_port}: |{true_file_data}|")
         if not os.path.exists("downloaded"):
             os.makedirs("downloaded")
         with open(f"downloaded/{file_name}", 'wb') as file:
