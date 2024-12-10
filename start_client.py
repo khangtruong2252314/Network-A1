@@ -1,11 +1,11 @@
 from run import run_peer
 import asyncio
 from argparse import ArgumentParser
+import os
 
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('--port', type=int, default=1109)
-    parser.add_argument('--files', type=str, nargs='+', default=[])
     parser.add_argument('--peer_name', type=str, default='PEER')
     parser.add_argument('--request_files', type=str, nargs='+', default=[])
     parser.add_argument('--tracker_ip', type=str, default='127.0.0.1')
@@ -14,7 +14,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     tracker_port = args.port
     peer_port = args.port
-    files = args.files
+    files = os.listdir('./box/data')
     request_files = args.request_files
     tracker_ip = args.tracker_ip
     tracker_port = args.tracker_port

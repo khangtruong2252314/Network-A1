@@ -26,7 +26,6 @@ class Register(Action):
     async def execute(self):
         peer_ip, _ = self.writer.get_extra_info('peername')
         peer_port = self.message.get('port')
-        sock = self.writer.get_extra_info('socket')
         # peer_ip, peer_port = sock.getsockname()
         files = self.message.get('files', [])
         fsizes = self.message.get('file_sizes', 0)
