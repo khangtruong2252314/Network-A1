@@ -51,7 +51,7 @@ class PeerClient:
 
     async def signaling_server(self):
         while True:
-            asyncio.sleep(2)
+            await asyncio.sleep(2)
             self.files = os.listdir(self.file_path)
             file_sizes = [check_file_size(f"{self.file_path}/{file_path}") for file_path in self.files]
             register_message = {"type": "REGISTER", "port": self.peer_port, "files": self.files, "peer_ip": self.peer_ip, 'file_sizes': file_sizes}
