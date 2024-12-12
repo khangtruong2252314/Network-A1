@@ -38,6 +38,8 @@ class PeerClient:
         self.log(f"Registered with tracker at {self.tracker_ip}:{self.tracker_port}")
         self.server_thread = Thread(target=asyncio.run, args=(self.start_server(),))
         self.server_thread.start()
+        self.signaling_thread = Thread(target=asyncio.run, args=(self.signaling_server(),))
+        self.signaling_thread.start()
         self.log(f"Finishing setup server")
 
     async def start_server(self):
@@ -46,6 +48,14 @@ class PeerClient:
         self.log(f"{self.peer_name} listening on port {self.peer_port}")
         async with server:
             await server.serve_forever()
+
+    async def signaling_server(self):
+        while True:
+            asyncio.sleep(1)
+            self.files = os.listdir(self.file_path)
+            file_sizes = [check_file_size(f"{self.file_path}/{file_path}") for file_path in self.files]
+            register_message = {"type": "REGISTER", "port": self.peer_port, "files": self.files, "peer_ip": self.peer_ip, 'file_sizes': file_sizes}
+            await self.send_to_tracker(register_message)
 
     async def send_to_tracker(self, message):
         """Send a JSON message to the tracker."""
